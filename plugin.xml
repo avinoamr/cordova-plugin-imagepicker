@@ -1,0 +1,27 @@
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="org.avinoamr.cordova.imagepicker"
+    version="0.2.1">
+    <name>ImagePicker</name>
+    <description>Cordova ImagePicker Plugin</description>
+    <license>MIT</license>
+    <keywords>cordova,imagepicker</keywords>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
+    <js-module src="www/imagepicker.js" name="imagepicker">
+        <clobbers target="navigator.imagepicker" />
+    </js-module>
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="ImagePicker">
+                <param name="ios-package" value="CDVImagePicker" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/CDVImagePicker.h" />
+        <source-file src="src/ios/CDVImagePicker.m" />
+    </platform>
+</plugin>
