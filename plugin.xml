@@ -38,7 +38,7 @@
 
         <header-file src="src/ios/ELCImagePicker/ELCAssetPickerFilterDelegate.h" />
 
-        <header-file src="src/ios/ELCImagePicker/ELCAssetPickerSelectionDelegate.h" />
+        <header-file src="src/ios/ELCImagePicker/ELCAssetSelectionDelegate.h" />
 
         <header-file src="src/ios/ELCImagePicker/ELCAssetTablePicker.h" />
         <source-file src="src/ios/ELCImagePicker/ELCAssetTablePicker.m" />
