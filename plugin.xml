@@ -56,7 +56,8 @@
 
         <header-file src="src/ios/EYLargePhoto/EYLargePhotoHeader.h" />
 
-        <header-file src="src/ios/EYLargePhoto/EYLargeManager.h" />
+        <header-file src="src/ios/EYLargePhoto/EYLargePhotoManager.h" />
+        <source-file src="src/ios/EYLargePhoto/EYLargePhotoManager.m" />
 
         <header-file src="src/ios/EYLargePhoto/UIImage+EYFixOrientation.h" />
         <source-file src="src/ios/EYLargePhoto/UIImage+EYFixOrientation.m" />
