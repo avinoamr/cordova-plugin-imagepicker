@@ -24,7 +24,49 @@
         <header-file src="src/ios/CDVImagePicker.h" />
         <source-file src="src/ios/CDVImagePicker.m" />
 
-        <header-file src="src/ios/ELCImagePicker/ELCImagePickerController.h"
-            target="ELCImagePicker" />
+        <header-file src="src/ios/ELCImagePicker/ELCImagePickerController.h" />
+        <source-file src="src/ios/ELCImagePicker/ELCImagePickerController.m" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCAlbumPickerController.h" />
+        <source-file src="src/ios/ELCImagePicker/ELCAlbumPickerController.m" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCAsset.h" />
+        <source-file src="src/ios/ELCImagePicker/ELCAsset.m" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCAssetCell.h" />
+        <source-file src="src/ios/ELCImagePicker/ELCAssetCell.m" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCAssetPickerFilterDelegate.h" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCAssetPickerSelectionDelegate.h" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCAssetTablePicker.h" />
+        <source-file src="src/ios/ELCImagePicker/ELCAssetTablePicker.m" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCConsole.h" />
+        <source-file src="src/ios/ELCImagePicker/ELCConsole.m" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCImagePickerHeader.h" />
+
+        <header-file src="src/ios/ELCImagePicker/ELCOverlayImageView.h" />
+        <source-file src="src/ios/ELCImagePicker/ELCOverlayImageView.m" />
+
+        <header-file src="src/ios/EYLargePhoto/EYLargePhoto.h" />
+        <source-file src="src/ios/EYLargePhoto/EYLargePhoto.m" />
+
+        <header-file src="src/ios/EYLargePhoto/EYLargePhotoHeader.h" />
+
+        <header-file src="src/ios/EYLargePhoto/EYLargeManager.h" />
+
+        <header-file src="src/ios/EYLargePhoto/UIImage+EYFixOrientation.h" />
+        <source-file src="src/ios/EYLargePhoto/UIImage+EYFixOrientation.m" />
+
+        <resource-file src="src/ios/ELCImagePicker/Resources/ELCAlbumPickerController.xib" />
+        <resource-file src="src/ios/ELCImagePicker/Resources/ELCAssetPicker.xib" />
+        <resource-file src="src/ios/ELCImagePicker/Resources/ELCAssetTablePicker.xib" />
+        <resource-file src="src/ios/ELCImagePicker/Resources/Overlay.png" />
+        <resource-file src="src/ios/ELCImagePicker/Resources/Overlay@2x.png" />
+
+
     </platform>
 </plugin>
