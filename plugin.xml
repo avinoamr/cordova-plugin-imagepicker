@@ -25,6 +25,6 @@
         <source-file src="src/ios/CDVImagePicker.m" />
 
         <header-file src="src/ios/ELCImagePicker/ELCImagePickerController.h"
-            target="ELCImagePicker/ELCImagePickerController.h" />
+            target="ELCImagePicker" />
     </platform>
 </plugin>
