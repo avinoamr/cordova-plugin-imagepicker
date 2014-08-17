@@ -31,13 +31,16 @@
 }
 
 - (void) getData:(CDVInvokedUrlCommand *)command {
-    ALAssetsLibrary* lib = [[ALAssetsLibrary alloc] init];
+    [NSThread detachNewThreadSelector:@selector(getDataSync:) toTarget:self withObject:command];
+}
+
+- (void) getDataSync:(CDVInvokedUrlCommand *)command {
     NSString* urlString = [command.arguments objectAtIndex:0];
+    NSURL* url = [NSURL URLWithString:urlString];
     CGFloat width = [[command.arguments objectAtIndex:1] floatValue];
     CGFloat height = [[command.arguments objectAtIndex:2] floatValue];
     
-    NSURL* url = [NSURL URLWithString:urlString];
-    
+    ALAssetsLibrary* lib = [[ALAssetsLibrary alloc] init];
     ALAssetsLibraryAssetForURLResultBlock onSuccess = ^( ALAsset* asset ) {
         NSMutableDictionary* results = [[NSMutableDictionary alloc] init];
         ALAssetRepresentation* repr = [asset defaultRepresentation];
