@@ -40,7 +40,7 @@
     NSLocale* en = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     [formatter setLocale:en];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"]; // ISO-8601
+    [formatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
     
     NSMutableArray* results = [NSMutableArray array];
     __block int done = [info count];
