@@ -15,7 +15,7 @@
 - (void) pick:(CDVInvokedUrlCommand *)command {
     ELCImagePickerController *elcPicker = [[ELCImagePickerController alloc] initImagePicker];
     elcPicker.maximumImagesCount = 10; //Set the maximum number of images to select, defaults to 4
-    elcPicker.returnsOriginalImage = NO; //Only return the fullScreenImage, not the fullResolutionImage
+    elcPicker.returnsOriginalImage = YES; //Only return the fullScreenImage, not the fullResolutionImage
     elcPicker.returnsImage = YES; //Return UIimage if YES. If NO, only return asset location information
     elcPicker.onOrder = YES; //For multiple image selection, display and return selected order of images
     elcPicker.imagePickerDelegate = self;
@@ -66,8 +66,8 @@
 - (UIImage*) resizeImage:(UIImage *)image toWidth:(NSNumber *)w andHeight:(NSNumber *)h {
     CGFloat wf = [w floatValue];
     CGFloat hf = [h floatValue];
-    CGFloat wScale = image.size.width / wf;
-    CGFloat hScale = image.size.height / hf;
+    CGFloat wScale = wf / image.size.width;
+    CGFloat hScale = hf / image.size.height;
     CGFloat scale = ( wScale > hScale ) ? wScale : hScale;
     
     CGSize size = CGSizeMake( MIN( wf, scale * image.size.width ), MIN( hf, scale * image.size.height ) );
