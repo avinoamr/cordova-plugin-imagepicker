@@ -30,63 +30,82 @@
     return;
 }
 
+- (void) getData:(CDVInvokedUrlCommand *)command {
+    ALAssetsLibrary* lib = [[ALAssetsLibrary alloc] init];
+    NSString* urlString = [command.arguments objectAtIndex:0];
+    CGFloat width = [[command.arguments objectAtIndex:1] floatValue];
+    CGFloat height = [[command.arguments objectAtIndex:2] floatValue];
+    
+    NSURL* url = [NSURL URLWithString:urlString];
+    
+    ALAssetsLibraryAssetForURLResultBlock onSuccess = ^( ALAsset* asset ) {
+        NSMutableDictionary* results = [[NSMutableDictionary alloc] init];
+        ALAssetRepresentation* repr = [asset defaultRepresentation];
+        CGImageRef ref = [repr fullResolutionImage];
+        
+        // load the image
+        UIImageOrientation orientation = (UIImageOrientation)[repr orientation];
+        UIImage* image = [[UIImage alloc] initWithCGImage:ref scale:1.0f orientation:orientation];
+        
+        // resize the image
+        if ( width > 0 && height > 0 ) {
+            CGSize size = [repr dimensions];
+            CGFloat scalew = width / size.width;
+            CGFloat scaleh = height / size.height;
+            CGFloat scale = ( scalew > scaleh ) ? scalew : scaleh;
+            
+            size = CGSizeMake( scale * size.width, scale * size.height );
+            UIGraphicsBeginImageContext( size );
+            [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+            image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+        
+        NSData* data = UIImageJPEGRepresentation(image, .5);
+        [results setValue:[data base64EncodedString] forKey:@"base64"];
+        
+        CLLocation* loc = [asset valueForProperty:ALAssetPropertyLocation];
+        NSNumber* lat = [[NSNumber alloc] initWithDouble:loc.coordinate.latitude];
+        NSNumber* lng = [[NSNumber alloc] initWithDouble:loc.coordinate.longitude];
+        
+        [results setObject:lat forKey:@"lat"];
+        [results setObject:lng forKey:@"lng"];
+        
+        NSDate* date = [asset valueForProperty:ALAssetPropertyDate];
+        NSLocale* en = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+        NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+        [formatter setLocale:en];
+        [formatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+        [results setObject:[formatter stringFromDate:date] forKey:@"date"];
+    
+        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:results];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    };
+    
+    ALAssetsLibraryAccessFailureBlock onError = ^( NSError* err ) {
+        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    };
+    
+    [lib assetForURL:url resultBlock:onSuccess failureBlock:onError];
+}
+
 - (void) exists:(CDVInvokedUrlCommand *) command {
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 - (void) elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info {
-    ALAssetsLibrary* lib = [[ALAssetsLibrary alloc] init];
-    NSLocale* en = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setLocale:en];
-    [formatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-    
+    [self.viewController dismissViewControllerAnimated:YES completion:nil];
     NSMutableArray* results = [NSMutableArray array];
-    __block int done = [info count];
     for ( NSDictionary* dict in info ) {
-        
         NSMutableDictionary* d = [[NSMutableDictionary alloc] init];
         NSURL* url = [dict objectForKey:UIImagePickerControllerReferenceURL];
         [d setValue: [url absoluteString] forKey:@"url"];
-        
-        UIImage* image = [dict objectForKey:UIImagePickerControllerOriginalImage];
-        if ( self.targetHeight > 0 && self.targetWidth > 0 ) {
-            image = [self resizeImage:image toWidth:self.targetWidth andHeight:self.targetHeight];
-        }
-        
-        NSData* data = UIImageJPEGRepresentation(image, .5);
-        [d setObject:[data base64EncodedString] forKey:@"data"];
-        
-        
-        ALAssetsLibraryAssetForURLResultBlock onSuccess = ^(ALAsset* asset) {
-            CLLocation* loc = [asset valueForProperty:ALAssetPropertyLocation];
-            NSNumber* lat = [[NSNumber alloc] initWithDouble:loc.coordinate.latitude];
-            NSNumber* lng = [[NSNumber alloc] initWithDouble:loc.coordinate.longitude];
-            
-            [d setObject:lat forKey:@"lat"];
-            [d setObject:lng forKey:@"lng"];
-            
-            NSDate* date = [asset valueForProperty:ALAssetPropertyDate];
-            [d setObject:[formatter stringFromDate:date] forKey:@"date"];
-            
-            done -= 1;
-            if ( done <= 0 ) {
-                [self didFinishWithResults:results];
-            }
-        };
-        
-        ALAssetsLibraryAccessFailureBlock onError = ^(NSError* err) {
-            // do nothing - no metadata exists
-            done -= 1;
-            if ( done <= 0 ) {
-                [self didFinishWithResults:results];
-            }
-        };
-        
-        [lib assetForURL:url resultBlock:onSuccess failureBlock:onError];
         [results addObject: d];
     }
+    CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:results];
+    [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
 }
 
 - (void) didFinishWithResults:(NSArray*) results {

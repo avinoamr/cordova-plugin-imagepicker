@@ -1,5 +1,20 @@
 var exec = require( "cordova/exec" );
 
+function PickedImage( attrs ) {
+    this.url = attrs.url;
+}
+
+PickedImage.prototype.getData = function ( success, error, options ) {
+    var args = [
+        this.url,
+        options.width || 0,
+        options.height || 0
+    ];
+
+    exec( success, error, "imagepicker", "getData", args );
+    return this;
+}
+
 var exists;
 var imagepicker = module.exports = {
     exists: function ( callback ) {
@@ -33,7 +48,11 @@ var imagepicker = module.exports = {
                 options.targetHeight || 0
             ];
 
-            exec( success, error, "imagepicker", "pick", args );
+            exec( function ( results ) {
+                success( results.map( function ( image ) {
+                    return new PickedImage( image );
+                }))
+            }, error, "imagepicker", "pick", args );
         })
     }
 }

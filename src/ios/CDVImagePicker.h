@@ -18,6 +18,8 @@
 // quick command to check if the plugin exists and is available
 - (void) exists: (CDVInvokedUrlCommand*) command;
 - (void) pick: (CDVInvokedUrlCommand*) command;
+- (void) getData: (CDVInvokedUrlCommand*) command;
+
 - (void) elcImagePickerController: (ELCImagePickerController *) picker didFinishPickingMediaWithInfo:(NSArray *)info;
 - (void) elcImagePickerControllerDidCancel: ( ELCImagePickerController* ) picker;
 

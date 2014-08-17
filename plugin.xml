@@ -1,6 +1,6 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="org.avinoamr.cordova.imagepicker"
-    version="0.3.0">
+    version="0.4.0">
     <name>ImagePicker</name>
     <description>Cordova ImagePicker Plugin</description>
     <license>MIT</license>
