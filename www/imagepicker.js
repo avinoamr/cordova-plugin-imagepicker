@@ -1,7 +1,7 @@
 var exec = require( "cordova/exec" );
 
 var exists;
-module.exports = {
+var imagepicker = module.exports = {
     exists: function ( callback ) {
         if ( typeof exists == "undefined" ) {
             try {
@@ -16,11 +16,13 @@ module.exports = {
                 exists = false;
                 callback( exists );
             }
+        } else {
+            callback( exists );
         }
     },
 
     pick: function ( success, error ) {
-        module.exports.exists(function ( exists ) {
+        imagepicker.exists(function ( exists ) {
             if ( !exists ) { 
                 return error( "imagepicker is only available on iOS" ); 
             }
