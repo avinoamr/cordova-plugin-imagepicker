@@ -21,12 +21,19 @@ var imagepicker = module.exports = {
         }
     },
 
-    pick: function ( success, error ) {
+    pick: function ( success, error, options ) {
+        options || ( options = {} );
         imagepicker.exists(function ( exists ) {
             if ( !exists ) { 
                 return error( "imagepicker is only available on iOS" ); 
             }
-            exec(success, error, "imagepicker", "pick" );
+
+            var args = [
+                options.targetWidth || 0,
+                options.targetHeight || 0
+            ];
+
+            exec( success, error, "imagepicker", "pick", args );
         })
     }
 }
