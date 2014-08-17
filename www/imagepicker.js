@@ -26,11 +26,7 @@ var imagepicker = module.exports = {
             if ( !exists ) { 
                 return error( "imagepicker is only available on iOS" ); 
             }
-            exec(function ( results ) {
-                success( results.map(function ( url ) {
-                    return { localURL: url };
-                }));
-            }, error, "imagepicker", "pick" );
+            exec(success, error, "imagepicker", "pick" );
         })
     }
 }
