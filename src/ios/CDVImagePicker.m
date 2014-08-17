@@ -6,9 +6,11 @@
 //
 //
 
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <CoreLocation/CoreLocation.h>
+#import <Cordova/NSData+Base64.h>
 #import "CDVImagePicker.h"
 #import "ELCImagePickerController.h"
-#import <Cordova/NSData+Base64.h>
 
 @implementation CDVImagePicker
 
@@ -34,13 +36,19 @@
 }
 
 - (void) elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info {
-    [self.viewController dismissViewControllerAnimated:YES completion:nil];
+    ALAssetsLibrary* lib = [[ALAssetsLibrary alloc] init];
+    NSLocale* en = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setLocale:en];
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"]; // ISO-8601
+    
     NSMutableArray* results = [NSMutableArray array];
+    __block int done = [info count];
     for ( NSDictionary* dict in info ) {
         
         NSMutableDictionary* d = [[NSMutableDictionary alloc] init];
-        NSString* url =[[dict objectForKey:UIImagePickerControllerReferenceURL] absoluteString];
-        [d setValue:url forKey:@"url"];
+        NSURL* url = [dict objectForKey:UIImagePickerControllerReferenceURL];
+        [d setValue: [url absoluteString] forKey:@"url"];
         
         UIImage* image = [dict objectForKey:UIImagePickerControllerOriginalImage];
         if ( self.targetHeight > 0 && self.targetWidth > 0 ) {
@@ -49,9 +57,40 @@
         
         NSData* data = UIImageJPEGRepresentation(image, .5);
         [d setObject:[data base64EncodedString] forKey:@"data"];
+        
+        
+        ALAssetsLibraryAssetForURLResultBlock onSuccess = ^(ALAsset* asset) {
+            CLLocation* loc = [asset valueForProperty:ALAssetPropertyLocation];
+            NSNumber* lat = [[NSNumber alloc] initWithDouble:loc.coordinate.latitude];
+            NSNumber* lng = [[NSNumber alloc] initWithDouble:loc.coordinate.longitude];
+            
+            [d setObject:lat forKey:@"lat"];
+            [d setObject:lng forKey:@"lng"];
+            
+            NSDate* date = [asset valueForProperty:ALAssetPropertyDate];
+            [d setObject:[formatter stringFromDate:date] forKey:@"date"];
+            
+            done -= 1;
+            if ( done <= 0 ) {
+                [self didFinishWithResults:results];
+            }
+        };
+        
+        ALAssetsLibraryAccessFailureBlock onError = ^(NSError* err) {
+            // do nothing - no metadata exists
+            done -= 1;
+            if ( done <= 0 ) {
+                [self didFinishWithResults:results];
+            }
+        };
+        
+        [lib assetForURL:url resultBlock:onSuccess failureBlock:onError];
         [results addObject: d];
     }
-    
+}
+
+- (void) didFinishWithResults:(NSArray*) results {
+    [self.viewController dismissViewControllerAnimated:YES completion:nil];
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:results];
     [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
 }

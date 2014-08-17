@@ -33,7 +33,12 @@ var imagepicker = module.exports = {
                 options.targetHeight || 0
             ];
 
-            exec( success, error, "imagepicker", "pick", args );
+            exec( function ( results ) {
+                success( results.map( function ( image ) {
+                    image.date && ( image.date = new Date( image ) );
+                    return image;
+                }))
+            }, error, "imagepicker", "pick", args );
         })
     }
 }
