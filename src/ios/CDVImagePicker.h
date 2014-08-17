@@ -12,6 +12,8 @@
 @interface CDVImagePicker : CDVPlugin
 
 @property NSString* callbackId;
+@property NSNumber* targetWidth;
+@property NSNumber* targetHeight;
 
 // quick command to check if the plugin exists and is available
 - (void) exists: (CDVInvokedUrlCommand*) command;
