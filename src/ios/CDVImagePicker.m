@@ -78,7 +78,7 @@
         NSLocale* en = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
         [formatter setLocale:en];
-        [formatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         [results setObject:[formatter stringFromDate:date] forKey:@"date"];
     
         CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:results];
