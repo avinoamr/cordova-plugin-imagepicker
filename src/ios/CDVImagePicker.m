@@ -69,7 +69,8 @@
         [results setValue:[data base64EncodedString] forKey:@"base64"];
 
         if ( ![ destination isEqual:@"" ] ) {
-            [ data writeToFile:destination atomically:YES ];
+            NSURL* url = [ NSURL URLWithString:destination];
+            [ data writeToURL:url atomically:YES ];
             [ results setValue:destination forKey:@"url" ];
         }
         
