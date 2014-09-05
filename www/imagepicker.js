@@ -8,7 +8,8 @@ PickedImage.prototype.getData = function ( success, error, options ) {
     var args = [
         this.url,
         options.width || 0,
-        options.height || 0
+        options.height || 0,
+        options.destination || ""
     ];
 
     exec( success, error, "imagepicker", "getData", args );

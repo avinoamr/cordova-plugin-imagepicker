@@ -39,6 +39,7 @@
     NSURL* url = [NSURL URLWithString:urlString];
     CGFloat width = [[command.arguments objectAtIndex:1] floatValue];
     CGFloat height = [[command.arguments objectAtIndex:2] floatValue];
+    NSString* destination = [command.arguments objectAtIndex:3];
     
     ALAssetsLibrary* lib = [[ALAssetsLibrary alloc] init];
     ALAssetsLibraryAssetForURLResultBlock onSuccess = ^( ALAsset* asset ) {
@@ -66,6 +67,11 @@
         
         NSData* data = UIImageJPEGRepresentation(image, .5);
         [results setValue:[data base64EncodedString] forKey:@"base64"];
+
+        if ( ![ destination isEqual:@"" ] ) {
+            [ data writeToFile:destination atomically:YES ];
+            [ results setValue:destination forKey:@"url" ];
+        }
         
         CLLocation* loc = [asset valueForProperty:ALAssetPropertyLocation];
         NSNumber* lat = [[NSNumber alloc] initWithDouble:loc.coordinate.latitude];
