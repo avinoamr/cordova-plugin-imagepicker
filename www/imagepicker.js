@@ -45,6 +45,7 @@ var imagepicker = module.exports = {
             }
 
             var args = [
+                options.count || 10,
                 options.targetWidth || 0,
                 options.targetHeight || 0
             ];
