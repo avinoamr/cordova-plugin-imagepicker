@@ -16,15 +16,15 @@
 
 - (void) pick:(CDVInvokedUrlCommand *)command {
     ELCImagePickerController *elcPicker = [[ELCImagePickerController alloc] initImagePicker];
-    elcPicker.maximumImagesCount = 10; //Set the maximum number of images to select, defaults to 4
+    elcPicker.maximumImagesCount = [command.arguments objectAtIndex:0]; //Set the maximum number of images to select, defaults to 4
     elcPicker.returnsOriginalImage = YES; //Only return the fullScreenImage, not the fullResolutionImage
     elcPicker.returnsImage = YES; //Return UIimage if YES. If NO, only return asset location information
     elcPicker.onOrder = YES; //For multiple image selection, display and return selected order of images
     elcPicker.imagePickerDelegate = self;
     
     self.callbackId = command.callbackId;
-    self.targetWidth = [command.arguments objectAtIndex:0];
-    self.targetHeight = [command.arguments objectAtIndex:1];
+    self.targetWidth = [command.arguments objectAtIndex:1];
+    self.targetHeight = [command.arguments objectAtIndex:2];
     
     [self.viewController presentViewController:elcPicker animated:YES completion:nil];
     return;
